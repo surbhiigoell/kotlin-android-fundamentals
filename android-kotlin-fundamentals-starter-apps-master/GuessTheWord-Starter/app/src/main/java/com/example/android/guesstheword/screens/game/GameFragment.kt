@@ -52,12 +52,7 @@ class GameFragment : Fragment() {
 
         Log.i("GameFragment", "Called ViewModelProvider.get")
         viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
-        viewModel.score.observe(viewLifecycleOwner, Observer { newScore ->
-            binding.scoreText.text = newScore.toString()
-        })
-        viewModel.word.observe(viewLifecycleOwner, Observer { newWord ->
-            binding.wordText.text = newWord
-        })
+
         viewModel.eventGameFinished.observe(viewLifecycleOwner, Observer<Boolean> { hasFinished ->
             if (hasFinished) gameFinished()
         })
@@ -65,6 +60,10 @@ class GameFragment : Fragment() {
         //Set the viewmodel for databinding - this allows the bound layout access
         //to all the data in the viewmodel
         binding.gameViewModel = viewModel
+
+        //Specify the fragment view as the lifecycle owner of the binding.
+        //this is used so that the binding an observe LiveData updates.
+        binding.lifecycleOwner = viewLifecycleOwner
 
         return binding.root
 
